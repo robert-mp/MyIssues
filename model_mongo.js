@@ -484,6 +484,7 @@ function removeWorkspace(token, workspaceID, cb) {
                 let db = client.db('myissues');
                 let users = db.collection('users');
                 let workspaces = db.collection('workspaces');
+                let issues = db.collection('issues');
                 //Comprobamos si el usuario si el token es valido
                 users.findOne({ _id: new mongodb.ObjectID(token) }, (err, _user) => {
                     if (err) _cb(err);
@@ -499,8 +500,13 @@ function removeWorkspace(token, workspaceID, cb) {
                                 workspaces.deleteOne({ _id: new mongodb.ObjectID(workspaceID) }, (err, _result) => {
                                     if (err) _cb(err);
                                     else {
-                                        //console.log(_result);
-                                        _cb(null, _result)
+                                        //borramos tambien sus issues asociadas
+                                        issues.deleteOne({workspace: new mongodb.ObjectId(workspaceID)}, (err, _result2=>{
+                                            if (err) _cb(err);
+                                            else{
+                                                _cb(null, _result)
+                                            }
+                                        }))
                                     }
                                 });
                             }
@@ -737,7 +743,7 @@ function listIssues(token, query, cb) {
                                     //console.log(_actions);
                                     return { 
                                         id: issue._id.toHexString(), title: issue.title, state : issue.state,
-                                        ini: issue.ini, due: issue.due , actions: JSON.stringify(_actions)
+                                        ini: issue.ini, due: issue.due , workspaces: issue.workspace.toHexString() ,actions: JSON.stringify(_actions)
                                     };
                                 });
                                 _cb(null, results);
