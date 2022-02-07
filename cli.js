@@ -1,6 +1,7 @@
 const readline = require("readline");
 const minimist = require("minimist");
-const model = require("./model_mongo.js");
+const model = require("./model_rest.js");
+const modelmq= require("./model_mq.js");
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -58,9 +59,9 @@ function menu(args, cb) {
                     email: args.e || args.email,
                     password: args.p || args.password
                 };
-                model.addUser(user, (err, _user) => {
+                modelmq.addUser(user, (err, _user) => {
                     if (err) console.log(err.stack);
-                    else console.log(`Added ${_user.name} \nDone :)`);
+                    else console.log(`Added user \nDone :)`);
                     cb();
                 })
                 break;
@@ -76,7 +77,7 @@ function menu(args, cb) {
                     email: args.e || args.email,
                     password: args.p || args.password
                 }
-                model.updateUser(credentials.token, userID2, data, (err, _user) => {
+                modelmq.updateUser(credentials.token, userID2, data, (err, _user) => {
                     if (err) console.log(err.stack);
                     else {
                         console.log(`Updated user`)
@@ -91,7 +92,7 @@ function menu(args, cb) {
                     cb();
                 }
                 let userID = args.u || args.user;
-                model.removeUser(credentials.token, userID, (err, _user) => {
+                modelmq.removeUser(credentials.token, userID, (err, _user) => {
                     if (err) console.log(err.stack);
                     else {
                         console.log(`Removed correctly :)`)
@@ -127,7 +128,7 @@ function menu(args, cb) {
                         title: args.t || args.title,
                         desc: args.d || args.desc
                     };
-                    model.addWorkspace(credentials.token, workspace, (err, _workspace) => {
+                    modelmq.addWorkspace(credentials.token, workspace, (err, _workspace) => {
                         if (err) console.log(err.stack);
                         else console.log(`Added ${_workspace} \n Done :)`);
                         cb();
@@ -144,7 +145,7 @@ function menu(args, cb) {
                     title: args.t || args.title,
                     desc: args.d || args.desc
                 }
-                model.updateWorkspace(credentials.token, workspacedata, workspaceID2, (err, _user) => {
+                modelmq.updateWorkspace(credentials.token, workspacedata, workspaceID2, (err, _user) => {
                     if (err) console.log(err.stack);
                     else {
                         console.log(`Updated workspace`)
@@ -186,7 +187,7 @@ function menu(args, cb) {
                     cb();
                 } else {
                     let rwID = args.w || args.workspaceID;
-                    model.removeWorkspace(credentials.token, rwID, (err, _result) => {
+                    modelmq.removeWorkspace(credentials.token, rwID, (err, _result) => {
                         if (err) console.log(err.stack);
                         else console.log("Worksapce Removed");
                         cb();
@@ -222,7 +223,7 @@ function menu(args, cb) {
                         title: args.t || args.t
                     }
                     let workspaceID = args.w || args.workspaceID
-                    model.addIssue(credentials.token, workspaceID, issue, (err, result) => {
+                    modelmq.addIssue(credentials.token, workspaceID, issue, (err, result) => {
                         if (err) console.log(err.stack);
                         else {
                             console.log(result);
@@ -242,7 +243,7 @@ function menu(args, cb) {
                         due: args.d || args.due,
                         title: args.t || args.t
                     }
-                    model.updateIssue(credentials.token, issueId, issuedata, (err, _user) => {
+                    modelmq.updateIssue(credentials.token, issueId, issuedata, (err, _user) => {
                         if (err) console.log(err.stack);
                         else {
                             console.log(`Updated issue`)
@@ -256,7 +257,7 @@ function menu(args, cb) {
                     cb();
                 } else {
                     let issueID = args.i || args.issueID;
-                    model.removeIssue(credentials.token, issueID, (err, _result) => {
+                    modelmq.removeIssue(credentials.token, issueID, (err, _result) => {
                         if (err) console.log(err.stack);
                         else console.log("Issue Removed");
                         cb();
@@ -277,7 +278,7 @@ function menu(args, cb) {
                         if (err) console.log(err.stack);
                         else {
                             //no consigo que se imprima bien las actions... incluso mapeandolas en model_mongo. La solucion que tengo ahora mismo es hacer un JSON.Stringify
-                            console.log(issues);
+                            console.dir(issues, {depth: null});
                         }
                         cb();
                     });
@@ -295,7 +296,7 @@ function menu(args, cb) {
                     //comprobar si se pasa un usuario al que asignarle una issue 
                     if (args.u || args.user) action.content = args.u || args.user;
                     let issueID = args.i || args.issueID;
-                    model.addAction(credentials.token, issueID, action, (err, result) => {
+                    modelmq.addAction(credentials.token, issueID, action, (err, result) => {
                         if (err) console.log(err.stack);
                         else {
                             //no consigo que se imprima bien las actions... incluso mapeandolas en model_mongo. La solucion que tengo ahora mismo es hacer un JSON.Stringify 

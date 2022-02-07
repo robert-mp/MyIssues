@@ -1,65 +1,3 @@
-/*let users = {
-    "u1": {
-        id: "u1",
-        name: "User 1",
-        surname: "Surname 1",
-        email: "u1",
-        password: "xxx",
-        workspaces: ["w1"]
-    },
-    "u2": {
-        id: "u2",
-        name: "User 2",
-        surname: "Surname 2",
-        email: "u2@upv.es",
-        password: "xxx",
-        workspaces: ["w1"]
-    }
-};
-let workspaces = {
-    "w1": {
-        id: "w1",
-        title: "Workspace 1",
-        desc: "Workspace 1",
-        users: ["u1", "u2"]
-    }
-};
-let issues = {
-    "i1": {
-        id: "i1",
-        workspace: "w1",
-        title: "Issue 1",
-        ini: 1633284222739,
-        due: 1633284222739,
-        actions: [
-            {
-                type: "propose",
-                created: 1633284222739,
-                owner: "u1",
-                content: ""
-            },
-            {
-                type: "assign",
-                created: 1633284222739,
-                owner: "u1",
-                content: "u2"
-            },
-            {
-                type: "accept",
-                created: 1633284222739,
-                owner: "u2",
-                content: ""
-            },
-            {
-                type: "complete",
-                created: 1633284222739,
-                owner: "u2",
-                content: ""
-            },
-        ]
-    }
-};*/
-
 const MongoClient = require('mongodb').MongoClient;
 const mongodb = require('mongodb');
 const url = 'mongodb://localhost:27017';
@@ -562,7 +500,7 @@ function listWorkspaces(token, query, cb) {
 
     }
 }
-
+//------------------ISSUES-------------------------
 function addIssue(token, workspaceId, issue, cb) {
     if (!token) cb(new Error("Missing Token"));
     if (!workspaceId) cb(new Error("Missing Workspace Data :("));
@@ -757,6 +695,7 @@ function listIssues(token, query, cb) {
     }
 }
 
+//--------------ACTIONS-------------------------
 function addAction(token, issueID, action, cb) {
     if (!token) cb(new Error("Missing Token"));
     if (!issueID) cb(new Error("Missing issueID Data :("));
